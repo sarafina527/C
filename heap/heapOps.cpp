@@ -31,6 +31,9 @@ void maxHeapify(vector<int> &a,int i,int heapsize){
 		maxHeapify(a,maxci,heapsize);
 	}
 }
+/*----------保持最大堆的特性--------------
+* 尾递归优化
+*/
 void iterative_maxHeapify(vector<int> &a,int i,int heapsize){
 	while(1){
 		int maxci = i;
@@ -51,9 +54,7 @@ void iterative_maxHeapify(vector<int> &a,int i,int heapsize){
 	}
 	
 }
-/*----------保持最大堆的特性--------------
-* 尾递归优化
-*/
+
 void buildMaxHeap(vector<int> &a){
 	int heapsize = a.size()-1;//0位抛弃
 	for(int i=heapsize/2;i>=1;i--){
