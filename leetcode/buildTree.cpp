@@ -11,36 +11,22 @@
 class Solution {
 public:
     TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
-    	buildTreei(inorder,postorder,0,postorder.size()-1)
-    	
-        int i;
-        for(i=0;i<inorder.size()&&inorder[i]!=rootkey;i++);
-        vector<int> leftin = vector<int>();
-    	vector<int> leftpo = vector<int>();
-    	vector<int> rightin = vector<int>();
-    	vector<int> rightpo = vector<int>();
-    	for(int j=0;j<i;j++){
-    		leftin.push_back(inorder[j]);
-    		leftpo.push_back(postorder[j]);
-    	}
-    	for(int j=i;j<inorder.size()-1;j++){
-    		rightpo.push_back(postorder[j]);
-    		rightin.push_back(inorder[j+1]);
-    	}
-    	root->left = buildTree(leftin,leftpo);
-    	root->right = buildTree(rightin,rightpo);
+    	TreeNode* root =  buildTreei(inorder,postorder,0,0,postorder.size()); 	
+        
     	return root;
     }
-    TreeNode* buildTreei(vector<int>& inorder, vector<int>& postorder,int sti,int stp,int size) {
-    	if(st>end) return NULL;
-    	int rootkey = postorder[end];
-    	TreeNode* root = new TreeNode(rootkey);
-    	if(st==end) return root;
-    	int i;
-        for(i=st;i<inorder.size()&&inorder[i]!=rootkey;i++);
-        buildTreei(inorder,postorder,st,stp,i-st);
-    	buildTreei(inorder,postorder,i+1,i,size-i+st-1);
+    TreeNode* buildTreei(vector<int>& inorder, vector<int>& postorder,int ip,int pp,int size) {
+        if(size<1) return NULL;
+        int rootkey = postorder[pp+size-1];
+        TreeNode* root = new TreeNode(rootkey);
+    	if(size==1) return root;	
     	
+    	int i;
+        for(i=ip;i<ip+size&&inorder[i]!=rootkey;i++);//在中序序列中找到根，根据根所在位置，分割左右子树序列
+
+        root->left = buildTreei(inorder,postorder,ip,pp,i-ip);
+    	root->right = buildTreei(inorder,postorder,i+1,pp-ip+i,ip+size-i-1);//根据最后来倒推右子树的开始下标，pp+size-1-(ip+size-i-1),总后序序列的最后减去右子树大小
+    	return root;
 
     }
 };

@@ -17,16 +17,15 @@ public:
         string tmp = string();
 
     	for(int i=0;i<s.size();i++){
-            if(s[i]>='0'&&s[i]<='9'){
+            if(isdigit(s[i])){//如果是数字
                 digit.push(s[i]-'0');//压入数字
                 cout<<"digit="<<s[i]<<endl;
                 if(tmp.size()!=0){
                     str.push(tmp);
                     tmp.assign("");
                 }
-            }
-    		else if(s[i]=='['){
-    			lp.push(s[i]);//压入左括号
+            }else if(s[i]=='['){//如果是括号
+    			lp.push(i);//压入左括号的位置
 
     		}else if(isalpha(s[i])){
                 tmp.push_back(s[i]);
@@ -62,8 +61,8 @@ public:
     	}
     	
     	return ans;
-        
     }
+    string decodeSubstr(string )
 };
 int main(){
 	Solution sl = Solution();
