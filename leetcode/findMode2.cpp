@@ -10,41 +10,59 @@
 class Solution {
 public:
     vector<int> findMode(TreeNode* root) {
-    	vector<int> ans;
-        int pren = -1;//qian yige shu
-        int maxc = 0;//max cishu
-        int curc = 0;//dangqian cishu
-        trace(root,pren,maxc,ans,curc);
-        return vector<int>(1,maxn->val);
+        vector<int> ans;
+        int maxc=0,curval,curcount;
+        findMode(root,maxc,ans,curval,curcount);
+        return ans;
     }
-    void trace(TreeNode* root,int &pren,int& maxc,vector<int> &ans,int &curc){
-    	if(!root){
-    		return;
-    	}
-    	trace(root->left,pren,maxc,maxn,curc);
-    	if(!maxc){
-			pren = root;
-			maxc = 1;
-			ans.push(root->val);
-			curc = 1;
-		}else{
-			if(root->val==pren){
-				curc++;
-				if(curc>maxc){
-					ans.clear();
-					ans.push_back(root->val);
-					maxc = curc;
-				}else if(curc==maxc&&ans[ans.size()-1]!=root->val){
-					ans.push_back(root->val);
-				}
-			}else{
-				curc = 1;
-				if(curc==maxc&&ans[ans.size()-1]!=root->val){
-					ans.push_back(root->val);
-				pren = root->val;
-			}
-		}
-    	
-		trace(root->right,pren,maxc,maxn,curc);
+    void findMode(TreeNode* root,int& maxc,vector<int> &ans,int &curval,int &curcount){
+        if(!root){
+            maxc==0;
+            return;
+        }
+        if(!root->left&&!root->right){
+            curval = root->val;
+            curcount = 1;
+            ans.push_back(curval);
+            maxc = 1;
+        }
+        else{
+            int leftmaxc=0,rightmaxc=0,leftval,leftc,rightval,righc;
+            vector<int> leftans,rightans;
+            findMode(root->left,leftmaxc,leftans,leftval,leftc);
+            findMode(root->right,rightmaxc,rightans,rightval,righc);
+            curval = root->val;
+            curcount = 1;
+            if(leftmaxc>0&&curval==leftval)
+                curcount += leftc;
+            if(rightmaxc>0&&curval==rightval)
+                curcount += righc;
+            //merge left and right
+            if(rightmaxc>leftmaxc){
+                ans = rightans;
+                maxc = rightmaxc;
+            }else if(rightmaxc<leftmaxc){
+                ans = leftans;
+                maxc = leftmaxc;
+            }else{//相等
+                if(leftmaxc>0&&rightmaxc>0&&curcount<=leftmaxc){
+                    maxc = leftmaxc;
+                    ans.insert(ans.end(),leftans.begin(),leftans.end());
+                    ans.insert(ans.end(),rightans.begin(),rightans.end());
+                }else
+                    maxc = 0;
+            }
+            cout<<"before: "<<curval<<" "<<curcount<<" "<<maxc<<endl;
+            //compare with cur            
+            if(curcount==maxc){
+                ans.push_back(curval);
+            }else if(curcount>leftmaxc){
+                ans.clear();
+                ans.push_back(curval);
+                maxc = curcount;
+            }
+            cout<<"afterright: "<<curval<<" "<<curcount<<" "<<maxc<<endl;
+        }
+        cout<<"last: "<<curval<<" "<<curcount<<" "<<maxc<<endl;
     }
 };

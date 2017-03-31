@@ -61,6 +61,30 @@ void buildMaxHeap(vector<int> &a){
 		maxHeapify(a,i,heapsize);
 	}
 }
+
+//最小堆
+void buildMinHeap(vector<int> &a,const int& heapsize){//构建最小堆
+	for(int i=heapsize/2;i>=0;i--){//从内节点开始调整堆序，因为叶节点肯定符合堆序属性
+		minHeapify(a,i,heapsize);
+	}
+}
+void minHeapify(vector<int> &a,int i,const int& heapsize){//下沉
+	int mini = i;
+	if(left(i)<heapsize&&a[left(i)]<a[mini])//第一个条件判断边界 找到左右孩子比它小最多的交换
+		mini = left(i);
+	if(right(i)<heapsize&&a[right(i)]<a[mini])
+		mini = right(i);
+	if(mini!=i){//最后叶子的时候会相等||已经符合堆序属性（即比左右孩子都小了）
+		Swap(&a[i],&a[mini]);
+		minHeapify(a,mini,heapsize);//递归到交换的孩子
+	}
+}
+void Swap(int *p,int *q){
+	int tmp = *p;
+	*p = *q;
+	*q = tmp;
+}
+
 void heap_sort(vector<int> &a){
 	int heapsize = a.size()-1;
 	for(int i=heapsize;i>=2;i--){//把最后的元素与根交换，然后heapify，将最后元素移出堆

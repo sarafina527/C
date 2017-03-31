@@ -9,60 +9,42 @@ using namespace std;
 class Solution {
 public:
     string decodeString(string s) {
-    	string ans = string();
-    	stack<char> lp = stack<char>();//用于压入左括号
+        string ans = string();
         stack<int> digit = stack<int>();//用于存储数字
-        stack<string> str = stack<string>();//用于存储括号里的子串
-
+        stack<string> strstack = stack<string>();//用于存储括号里的子串
         string tmp = string();
-
-    	for(int i=0;i<s.size();i++){
+        int num = 0;
+        for(int i=0;i<s.size();i++){
             if(isdigit(s[i])){//如果是数字
-                digit.push(s[i]-'0');//压入数字
-                cout<<"digit="<<s[i]<<endl;
-                if(tmp.size()!=0){
-                    str.push(tmp);
-                    tmp.assign("");
-                }
-            }else if(s[i]=='['){//如果是括号
-    			lp.push(i);//压入左括号的位置
-
-    		}else if(isalpha(s[i])){
-                tmp.push_back(s[i]);
+                num = num*10+s[i]-'0';
+            }else if(s[i]=='['){//如果是括号,开始等待后面字符
+                digit.push(num);//压入数字
+                strstack.push(tmp);
+                tmp = "";//进入下个层次
+                num = 0;
             }else if(s[i]==']'){
-                if(tmp.size()!=0){
-                    str.push(tmp);
-                    tmp.assign("");
-                }
-                string inpstr = str.top();
-                str.pop();
-                cout<<"inner str is "<<inpstr<<endl;
-                int times = digit.top();                
+                int times = digit.top();
                 digit.pop();
-                cout<<"times="<<times<<endl;
-                lp.pop();
                 string res = "";
                 for(int i=0;i<times;i++){
-                    res.append(inpstr);
+                    res.append(tmp);
                 }
-                cout<<"res="<<res<<endl;
-                if(!lp.empty()){//若是内嵌的，则继续拼接
-                    string pre = "";
-                    if(!str.empty()){
-                        pre = str.top();
-                        str.pop();
-                    }                             
-                    pre.append(res);
-                    str.push(pre);
+                if(!strstack.empty()){//若是内嵌的，则继续拼接，tmp跳到外层
+                    string pre = strstack.top();
+                    strstack.pop();
+                    tmp = pre+res;
                 }else{//若是外层则压入结果
                     ans.append(res);
+                    tmp = "";
                 }
-            } 			
-    	}
-    	
-    	return ans;
+            }else{//其它字符
+                tmp.push_back(s[i]);
+            }           
+        }
+        if(!tmp.empty())
+            ans.append(tmp);
+        return ans;
     }
-    string decodeSubstr(string )
 };
 int main(){
 	Solution sl = Solution();

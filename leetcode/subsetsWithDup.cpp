@@ -9,9 +9,10 @@ public:
 
     }
     void subsetsWithDup(vector<int>& nums,int p,vector<int> sofar,vector<vector<int>> &ans) {
-        if(p<0)
-            ans.push_back(sort(sofar.begin(),sofar.end()));
-        else{
+        if(p<0){
+            sort(sofar.begin(),sofar.end());
+            ans.push_back(sofar);
+        }else{
             if(checkRepeat(nums,p)&&find(sofar.begin(),sofar.end(),nums[p])!=sofar.end()){
                sofar.push_back(nums[p]);
                subsetsWithDup(nums,p-1,sofar,ans);
@@ -32,7 +33,7 @@ public:
         }
         return 0;
     }
-    bool vecCMP(vector<int> v1,vector<int> v2){
+    static bool vecCMP(vector<int> &v1,vector<int> &v2){
         for(int i=0;i<v1.size()&&i<v2.size();i++){
             if(v1[i]==v2[i])
                 continue;
